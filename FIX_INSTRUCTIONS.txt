@@ -1,0 +1,56 @@
+TWITTER SCANNER - TROUBLESHOOTING GUIDE
+========================================
+
+If you're getting errors with localhost:5000 or start.bat, follow these steps:
+
+STEP 1: CHECK PYTHON INSTALLATION
+---------------------------------
+1. Open Command Prompt (cmd) or PowerShell
+2. Type: python --version
+3. If you get an error, install Python from https://python.org
+4. Make sure to check "Add Python to PATH" during installation
+
+STEP 2: INSTALL DEPENDENCIES
+----------------------------
+1. Navigate to your scanner folder:
+   cd "C:\Users\drago\OneDrive\Работен плот\Scanner\twitter_scanner"
+
+2. Install required packages:
+   pip install flask flask-sqlalchemy flask-cors requests beautifulsoup4 python-dotenv schedule
+
+STEP 3: TEST WITH SIMPLE VERSION
+--------------------------------
+1. Try running the simplified version first:
+   python app_simple.py
+
+2. If this works, open browser to: http://localhost:5000
+
+STEP 4: IF STILL NOT WORKING
+-----------------------------
+1. Run the troubleshooting script:
+   troubleshoot.bat
+
+2. Check what error messages you get
+
+STEP 5: COMMON FIXES
+--------------------
+- If "port 5000 in use": Change port in app.py (line with app.run)
+- If "module not found": Run pip install -r requirements.txt
+- If "permission denied": Run as Administrator
+- If "Python not found": Reinstall Python with "Add to PATH" checked
+
+STEP 6: ALTERNATIVE STARTUP
+---------------------------
+Instead of start.bat, try:
+1. Open Command Prompt
+2. Navigate to the folder
+3. Run: python app_simple.py
+
+STEP 7: CHECK FIREWALL/ANTIVIRUS
+--------------------------------
+- Some antivirus software blocks localhost connections
+- Try disabling temporarily to test
+- Add Python to antivirus exceptions
+
+If you're still having issues, please note the exact error message you see and share it.
+
