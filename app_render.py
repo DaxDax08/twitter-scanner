@@ -185,12 +185,9 @@ def index():
         accounts = MonitoredAccount.query.filter_by(is_active=True).all()
         return render_template('index_telegram.html', accounts=accounts)
     except Exception as e:
-        # Fallback for Render healthcheck
-        return jsonify({
-            'status': 'running',
-            'message': 'Twitter Scanner is running on Render',
-            'timestamp': datetime.now().isoformat()
-        }), 200
+        # Log the error and render the template with an empty list
+        print(f"Error loading accounts for index page: {e}")
+        return render_template('index_telegram.html', accounts=[])
 
 @app.route('/health')
 def health_check():
