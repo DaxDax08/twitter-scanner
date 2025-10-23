@@ -22,7 +22,7 @@ from bs4 import BeautifulSoup
 # Load environment variables
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 # Render database configuration
 database_url = os.getenv('DATABASE_URL', 'sqlite:///twitter_scanner.db')
@@ -183,11 +183,23 @@ telegram_bot = TelegramBot()
 def index():
     try:
         accounts = MonitoredAccount.query.filter_by(is_active=True).all()
+        print(f"Found {len(accounts)} accounts")
         return render_template('index_telegram.html', accounts=accounts)
     except Exception as e:
         # Log the error and render the template with an empty list
         print(f"Error loading accounts for index page: {e}")
+        print(f"Current working directory: {os.getcwd()}")
+        print(f"Template folder exists: {os.path.exists('templates')}")
+        print(f"Template file exists: {os.path.exists('templates/index_telegram.html')}")
         return render_template('index_telegram.html', accounts=[])
+
+@app.route('/test')
+def test_template():
+    """Test route to verify template rendering"""
+    try:
+        return render_template('index_telegram.html', accounts=[])
+    except Exception as e:
+        return f"Template error: {str(e)}", 500
 
 @app.route('/health')
 def health_check():
