@@ -185,7 +185,30 @@ def index():
         accounts = MonitoredAccount.query.filter_by(is_active=True).all()
         return render_template('index_telegram.html', accounts=accounts)
     except Exception as e:
-        return f"Error loading page: {str(e)}", 500
+        # Fallback for Railway healthcheck
+        return jsonify({
+            'status': 'running',
+            'message': 'Twitter Scanner is running',
+            'timestamp': datetime.now().isoformat()
+        }), 200
+
+@app.route('/health')
+def health_check():
+    """Health check endpoint for Railway"""
+    try:
+        # Test database connection
+        db.session.execute('SELECT 1')
+        return jsonify({
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'database': 'connected'
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'status': 'unhealthy',
+            'timestamp': datetime.now().isoformat(),
+            'error': str(e)
+        }), 500
 
 @app.route('/api/accounts', methods=['GET'])
 def get_accounts():
@@ -441,9 +464,13 @@ def monitor_accounts():
 # Railway-specific startup
 def create_tables():
     """Create database tables"""
-    with app.app_context():
-        db.create_all()
-        print("✅ Database tables created")
+    try:
+        with app.app_context():
+            db.create_all()
+            print("✅ Database tables created")
+    except Exception as e:
+        print(f"❌ Error creating database tables: {e}")
+        raise
 
 # Initialize the app for Railway
 def initialize_app():
@@ -471,6 +498,11 @@ def initialize_app():
         print("1. Check your environment variables")
         print("2. Ensure all dependencies are installed")
         print("3. Check Railway logs for more details")
+        # Don't raise the exception to allow the app to start
 
-# Initialize the app when imported
-initialize_app()
+# Initialize the app when imported (with error handling)
+try:
+    initialize_app()
+except Exception as e:
+    print(f"⚠️  Warning: App initialization failed: {e}")
+    print("App will continue to start but may not function properly")

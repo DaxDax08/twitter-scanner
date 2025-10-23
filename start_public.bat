@@ -65,3 +65,4 @@ echo.
 echo Press any key to stop the application...
 pause >nul
 taskkill /f /im python.exe >nul 2>&1
+
