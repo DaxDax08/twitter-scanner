@@ -445,7 +445,9 @@ def create_tables():
         db.create_all()
         print("✅ Database tables created")
 
-if __name__ == '__main__':
+# Initialize the app for Railway
+def initialize_app():
+    """Initialize the application for Railway deployment"""
     try:
         print("🐦 Starting Twitter Scanner on Railway...")
         print("=" * 50)
@@ -460,17 +462,15 @@ if __name__ == '__main__':
         else:
             print("⚠️  Telegram bot not configured - notifications will be disabled")
         
-        print("🚀 Starting web server...")
-        print("🌐 Railway deployment ready!")
+        print("🚀 Railway deployment ready!")
         print("=" * 50)
         
-        # Start the Flask app
-        port = int(os.getenv('PORT', 5000))
-        app.run(debug=False, host='0.0.0.0', port=port)
-        
     except Exception as e:
-        print(f"❌ Error starting application: {e}")
+        print(f"❌ Error initializing application: {e}")
         print("\nTroubleshooting tips:")
         print("1. Check your environment variables")
         print("2. Ensure all dependencies are installed")
         print("3. Check Railway logs for more details")
+
+# Initialize the app when imported
+initialize_app()
