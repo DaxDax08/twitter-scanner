@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: twitter-scanner
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: twitter-scanner-db
+          property: connectionString
+    plan: free
+
+databases:
+  - name: twitter-scanner-db
+    plan: free
